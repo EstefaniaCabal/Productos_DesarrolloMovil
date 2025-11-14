@@ -103,5 +103,38 @@ class ProductoService extends ChangeNotifier {
   void updateImagenProducto(String path) {
     this.productoSeleccionado!.imagen = path;
     this.newImagenProducto = File.fromUri(Uri(path:path));
+
+
+    notifyListeners();
+  }
+
+  // método para subir la imgane a cloudinary
+  Future<String?> subirImagen() async {
+    if (this.newImagenProducto == null) return null;
+
+    this.isSaving = true;
+    notifyListeners();
+
+    final url = Uri.parse
+    ('https://api.cloudinary.com/v1_1/dyourcloudname/image/upload?upload_preset=productos');
+
+    final imageUploadRequest = http.MultipartRequest('POST', url);
+
+    final file = 
+      await http.MultipartFile.fromPath('file',this.newImagenProducto!.path);
+    imageUploadRequest.files.add(file);
+
+    final streamResponse = await imageUploadRequest.send();
+    final resp = await http.Response.fromStream(streamResponse);
+
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
+      print('Error');
+      return null;
+    }
+
+    this.newImagenProducto = null;
+
+    final decodedData = json.decode(resp.body);
+    return decodedData['secure_url'];
   }
 }

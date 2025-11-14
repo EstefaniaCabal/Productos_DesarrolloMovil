@@ -101,12 +101,20 @@ class _ProductoScreenBody extends StatelessWidget {
           //productoForm.isValidForm();
           if(!productoForm.isValidForm()) return;
 
+          final String? imagenUrl = await productoService.subirImagen();
+
+          if(imagenUrl != null){
+            productoForm.producto.imagen = imagenUrl;
+          }
+
           await productoService.crearOActualizarProducto(productoForm.producto);
         },
       ),
     );
   }
 }
+
+
 
 class _ProductoForm extends StatelessWidget {
   //const _ProductoForm({super.key});
