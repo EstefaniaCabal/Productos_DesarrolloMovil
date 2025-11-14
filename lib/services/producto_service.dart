@@ -16,6 +16,8 @@ class ProductoService extends ChangeNotifier {
 
   Producto? productoSeleccionado;
 
+  File? newImagenProducto;
+
   //constructor
   ProductoService(){
     this.obtenerProductos();
@@ -97,5 +99,9 @@ class ProductoService extends ChangeNotifier {
     return producto.id!;
   }
 
-
+  // método para subir imagen
+  void updateImagenProducto(String path) {
+    this.productoSeleccionado!.imagen = path;
+    this.newImagenProducto = File.fromUri(Uri(path:path));
+  }
 }

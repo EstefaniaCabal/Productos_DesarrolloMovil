@@ -6,6 +6,8 @@ import 'package:productos_app/services/producto_service.dart';
 import 'package:productos_app/widgets/producto_imagen.dart';
 import 'package:provider/provider.dart';
 
+import 'package:image_picker/image_picker.dart';
+
 class ProductoScreen extends StatelessWidget {
   const ProductoScreen({super.key});
 
@@ -65,7 +67,23 @@ class _ProductoScreenBody extends StatelessWidget {
                       size: 40,
                       color: Colors.white,
                       ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      final picker = new ImagePicker();
+                      final XFile? imagenSeleccionada =
+                        await picker.pickImage(
+                          source: ImageSource.camera,
+                        //  source: ImageSource.gallery,
+                          imageQuality: 100,
+                        );
+                        if(imagenSeleccionada == null){
+                          print('No seleccionó la imagen');
+                          return;
+                        }
+
+                        print ('imagen ${imagenSeleccionada.path}');
+                        productoService.updateImagenProducto(
+                          imagenSeleccionada.path);
+                    },
                   ),
                 ),
               ],
